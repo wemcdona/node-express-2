@@ -1,6 +1,6 @@
 const timeWord = require('./timeWord');
 
-describe('#timeword', () => {
+describe('#timeWord', () => {
   test('it is a function', () => {
     expect(typeof timeWord).toBe('function');
   });
@@ -13,8 +13,8 @@ describe('#timeword', () => {
     expect(timeWord('00:12')).toBe('twelve twelve am');
   });
 
-  test('it converts 01:00 to one o clock am', () => {
-    expect(timeWord('01:00')).toBe('one o clock am');
+  test('it converts 01:00 to one o\'clock am', () => {
+    expect(timeWord('01:00')).toBe('one o\'clock am');
   });
 
   test('it converts 06:01 to six oh one am', () => {
@@ -32,3 +32,4 @@ describe('#timeword', () => {
   test('it converts 06:30 to six thirty am', () => {
     expect(timeWord('06:30')).toBe('six thirty am');
   });
+});

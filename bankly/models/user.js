@@ -25,18 +25,20 @@ class User {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
+    // FIXES BUG #2: Missing 'admin' field in the return value of the 'register' method
     const result = await db.query(
       `INSERT INTO users 
-          (username, password, first_name, last_name, email, phone) 
-        VALUES ($1, $2, $3, $4, $5, $6) 
-        RETURNING username, password, first_name, last_name, email, phone`,
+          (username, password, first_name, last_name, email, phone, admin) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7) 
+        RETURNING username, password, first_name, last_name, email, phone, admin`,
       [
         username,
         hashedPassword,
         first_name,
         last_name,
         email,
-        phone
+        phone,
+        false
       ]
     );
 
@@ -79,7 +81,8 @@ class User {
    *
    * */
 
-  static async getAll(username, password) {
+  // FIXES BUG #3: 'getAll' method incorrectly accepts parameters
+  static async getAll() {
     const result = await db.query(
       `SELECT username,
                 first_name,
@@ -98,6 +101,7 @@ class User {
    *
    **/
 
+  // FIXES BUG #1: Missing return statement in the 'get' method
   static async get(username) {
     const result = await db.query(
       `SELECT username,
@@ -113,7 +117,8 @@ class User {
     const user = result.rows[0];
 
     if (!user) {
-      new ExpressError('No such user', 404);
+      // Add throw keyword. 
+      throw new ExpressError('No such user', 404); 
     }
 
     return user;

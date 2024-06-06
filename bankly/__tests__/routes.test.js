@@ -37,7 +37,7 @@ beforeEach(async function() {
 });
 
 describe("POST /auth/register", function() {
-  test("should allow a user to register in", async function() {
+  test("should allow a user to register", async function() {
     const response = await request(app)
       .post("/auth/register")
       .send({
@@ -75,6 +75,7 @@ describe("POST /auth/register", function() {
   });
 });
 
+// TESTS BUG #4
 describe("POST /auth/login", function() {
   test("should allow a correct username/password to log in", async function() {
     const response = await request(app)
@@ -92,6 +93,7 @@ describe("POST /auth/login", function() {
   });
 });
 
+// TESTS BUG #5
 describe("GET /users", function() {
   test("should deny access if no token provided", async function() {
     const response = await request(app).get("/users");
@@ -111,6 +113,15 @@ describe("GET /users/[username]", function() {
   test("should deny access if no token provided", async function() {
     const response = await request(app).get("/users/u1");
     expect(response.statusCode).toBe(401);
+  });
+
+  // TESTS BUG #1
+  test("should return 404 if user not found", aync function() {
+    const response = await request(app)
+      .get("/users/not-a-user")
+      .send({_token: tokens.u1});
+    // Test for 404 status
+    expect(response.statusCode).toBe(404);
   });
 
   test("should return data on u1", async function() {

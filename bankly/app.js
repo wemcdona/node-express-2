@@ -33,6 +33,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-module.exports = app;
+// FIXES BUG #6: Redundant 'module.exports' in 'app.js'
 
 module.exports = app;

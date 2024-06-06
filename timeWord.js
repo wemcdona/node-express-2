@@ -1,87 +1,63 @@
 function timeWord(time) {
-    const [hours, minutes] = time.split(':').map(Number);
-    const isAm = hours < 12;
-    const hourWord = [
-      'twelve',
-      'one',
-      'two',
-      'three',
-      'four',
-      'five',
-      'six',
-      'seven',
-      'eight',
-      'nine',
-      'ten',
-      'eleven',
-      'twelve',
-    ][hours % 12 || 12];
-    const minuteWord = [
-      'oh',
-      'one',
-      'two',
-      'three',
-      'four',
-      'five',
-      'six',
-      'seven',
-      'eight',
-      'nine',
-      'ten',
-      'eleven',
-      'twelve',
-      'thirteen',
-      'fourteen',
-      'fifteen',
-      'sixteen',
-      'seventeen',
-      'eighteen',
-      'nineteen',
-    ][minutes];
-    const minuteWord2 = [
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      'six',
-      'seven',
-      'eight',
-      'nine',
-      'ten',
-      'eleven',
-      'twelve',
-      'thir',
-      'for',
-      'fif',
-      'six',
-      'seven',
-      'eigh',
-      'nin',
-    ][Math.floor(minutes / 10)];
-    const minuteWord3 = [
-      'zero',
-      'one',
-      'two',
-      'three',
-      'four',
-      'five',
-      'six',
-      'seven',
-      'eight',
-      'nine',
-    ][(minutes % 10)];
-    const minuteWordStr =
-      minutes === 0
-        ? ''
-        : minuteWord2 && minuteWord3
-        ? `${minuteWord2} ${minuteWord3}`
-        : minuteWord;
-    const suffix = isAm ? 'am' : 'pm';
-    return `${hourWord} ${hourWord === 'twelve' ? 'o’clock' : ''} ${
-      minutes === 0 ? '' : minuteWordStr
-    } ${suffix}`;
+  const [hours, minutes] = time.split(':').map(Number);
+  const isAm = hours < 12;
+  const hourWord = [
+    'twelve',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+    'ten',
+    'eleven',
+    'twelve',
+  ][hours % 12 || 12];
+
+  const minuteWords = [
+    'oh',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+    'ten',
+    'eleven',
+    'twelve',
+    'thirteen',
+    'fourteen',
+    'fifteen',
+    'sixteen',
+    'seventeen',
+    'eighteen',
+    'nineteen',
+  ];
+
+  let minuteWordStr;
+  if (minutes < 20) {
+    minuteWordStr = minuteWords[minutes];
+  } else {
+    const tensWords = ['twenty', 'thirty', 'forty', 'fifty'];
+    const tens = Math.floor(minutes / 10);
+    const units = minutes % 10;
+    minuteWordStr = `${tensWords[tens - 2]}${units ? ' ' + minuteWords[units] : ''}`;
   }
-  
-  module.exports = timeWord;
+
+  const suffix = isAm ? 'am' : 'pm';
+  const result = `${hourWord}${minutes === 0 ? " o'clock" : ' ' + minuteWordStr} ${suffix}`;
+
+  // Handle special cases
+  if (time === '00:00') return 'midnight';
+  if (time === '12:00') return 'noon';
+
+  return result.trim();
+}
+
+module.exports = timeWord;

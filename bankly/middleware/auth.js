@@ -44,11 +44,12 @@ function requireAdmin(req, res, next) {
  *
  **/
 
+// FIXES BUG #5: Incorrect token verification in 'authUser' middleware
 function authUser(req, res, next) {
   try {
     const token = req.body._token || req.query._token;
     if (token) {
-      let payload = jwt.decode(token);
+      let payload = jwt.verify(token);
       req.curr_username = payload.username;
       req.curr_admin = payload.admin;
     }
